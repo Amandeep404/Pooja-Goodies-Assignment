@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "272341988297",
+    "project_id": "pooja-goodies-assignment",
+    "storage_bucket": "pooja-goodies-assignment.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272341988297:android:6041d278c9a95cf3492e18",
+        "android_client_info": {
+          "package_name": "com.example.assignment1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272341988297-df3s68sv4jdn00pk9isubpsrt58jpv1e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlNdJHOVe7JSUPfhgYE7pVMwj6H-WgvwY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272341988297-242l8auls63svi6htt9a07s4d5ruoi1s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
