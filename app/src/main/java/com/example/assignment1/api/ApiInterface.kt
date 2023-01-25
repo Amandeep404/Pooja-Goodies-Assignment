@@ -15,8 +15,8 @@ interface ApiInterface {
 
     @GET(LIST_OF_CHANNELS)
     suspend fun fetchRequiredChannels(
-        @Query("part") part: String = "$SNIPPET,$DETAILS,$STATISTICS",
-        @Query("id") channelIDs : String = "UC_x5XG1OV2P6uZZ5FSM9Ttw",
+        @Query("part") part: String = "snippet",
+        @Query("id") channelIDs : String = LIST_OF_REQUIRED_CHANNEL_ID,
         @Query("key") apiKey : String = API_KEY
     ): Response<ApiResponse>
 }

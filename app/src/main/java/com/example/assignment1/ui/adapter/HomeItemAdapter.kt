@@ -1,19 +1,25 @@
 package com.example.assignment1.ui.adapter
 
+import android.graphics.Rect
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.assignment1.data.models.Item
 import com.example.assignment1.databinding.ItemYtChannelListBinding
+import com.example.assignment1.ui.fragments.HomeFragment
 
-class HomeItemAdapter:RecyclerView.Adapter<HomeItemAdapter.HomeItemViewHolder>() {
+class HomeItemAdapter(val clickListener: HomeFragment):RecyclerView.Adapter<HomeItemAdapter.HomeItemViewHolder>() {
+
 
     private val differCallBack = object : DiffUtil.ItemCallback<Item>(){
         override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.snippet == newItem.snippet
         }
 
         override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
@@ -22,20 +28,29 @@ class HomeItemAdapter:RecyclerView.Adapter<HomeItemAdapter.HomeItemViewHolder>()
     }
     val differ = AsyncListDiffer(this, differCallBack)
 
-    inner class HomeItemViewHolder(val binding: ItemYtChannelListBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class HomeItemViewHolder(val binding: ItemYtChannelListBinding) : RecyclerView.ViewHolder(binding.root){
+        fun bind(response : Item, clickListener : (Item) -> Unit){
+
+            val channelLogoUrl = response.snippet.thumbnails.medium.url
+            val title = response.snippet.title
+
+            binding.apply {
+                Glide.with(root)
+                    .load(channelLogoUrl)
+                    .centerCrop()
+                    .into(ivChannelItem)
+                tvChannelItem.text = title
+
+            }
+            itemView.setOnClickListener {
+                clickListener(response)
+            }
+
+        }
+    }
 
     override fun onBindViewHolder(holder: HomeItemViewHolder, position: Int) {
-        val item = differ.currentList[position]
-        val channelLogoUrl = item.snippet.thumbnails.medium.url
-        val title = item.snippet.title
-
-        holder.binding.apply {
-             Glide.with(root)
-                 .load(channelLogoUrl)
-                 .centerCrop()
-                 .into(ivChannelItem)
-            tvChannelItem.text = title
-        }
+        holder.bind(differ.currentList[position],clickListener )
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeItemViewHolder {

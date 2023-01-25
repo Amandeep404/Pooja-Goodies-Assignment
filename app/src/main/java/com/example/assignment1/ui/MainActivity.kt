@@ -18,9 +18,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
-        val binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+   //     val binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(R.layout.activity_main)
 
-        viewModel = ViewModelProvider(this).get(ChannelListViewModel::class.java)
+
     }
 }

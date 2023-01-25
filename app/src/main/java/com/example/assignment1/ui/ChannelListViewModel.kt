@@ -20,6 +20,10 @@ class ChannelListViewModel @Inject constructor(
     private val _channelList : MutableLiveData<Resource<ApiResponse>> = MutableLiveData()
     var channelList : LiveData<Resource<ApiResponse>> = _channelList
 
+    init {
+        fetchChannelList()
+    }
+
     private fun fetchChannelList() = viewModelScope.launch {
         _channelList.postValue(Resource.Loading())
         val response = repository.getChannelList()

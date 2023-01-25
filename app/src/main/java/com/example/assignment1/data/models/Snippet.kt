@@ -4,6 +4,7 @@ data class Snippet(
     val title: String,
     val country: String,
     val description: String,
+    val customUrl : String,
     val publishedAt: String,
     val thumbnails: Thumbnails
 

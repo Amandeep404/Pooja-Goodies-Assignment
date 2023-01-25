@@ -1,23 +1,33 @@
 package com.example.assignment1.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.assignment1.R
+import com.example.assignment1.data.models.Item
 import com.example.assignment1.databinding.FragmentHomeBinding
 import com.example.assignment1.ui.ChannelListViewModel
 import com.example.assignment1.ui.MainActivity
 import com.example.assignment1.ui.adapter.HomeItemAdapter
+import com.example.assignment1.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_home.*
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class HomeFragment : Fragment(R.layout.fragment_home), (Item) -> Unit {
+
+    companion object{
+       const val TAG = "LIST_OF_CHANNELS"
+        const val CUSTOM_URL = "CUSTOM_URL"
+    }
+
 
     private var _binding : FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -35,30 +45,62 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).supportActionBar?.title = "Home"
-
         setUpRecyclerView()
         observeDataFromApi()
+
     }
 
 
     private fun setUpRecyclerView() {
-        homeItemAdapter = HomeItemAdapter()
+        homeItemAdapter = HomeItemAdapter(this)
         binding.rvHomePage.apply {
             adapter = homeItemAdapter
-            layoutManager = GridLayoutManager(activity, 2)
+            layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
+
         }
     }
 
 
     private fun observeDataFromApi() {
-        viewModel.channelList.observe(viewLifecycleOwner){
-            homeItemAdapter.differ.submitList(it.data!!.items)
-        }
+        viewModel.channelList.observe(viewLifecycleOwner, Observer {
+            when(it){
+                is Resource.Success ->{
+                    hideProgressBar()
+                    it.data?.let {response ->
+                        homeItemAdapter.differ.submitList(response.items)
+                    }
+                }
+                is Resource.Error ->{
+                    hideProgressBar()
+                    it.message?.let {
+                        Log.e(TAG, "An error occurred: $it")
+                    }
+                }
+                is Resource.Loading ->{
+                    showProgressBar()
+                }
+            }
+        })
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun hideProgressBar() {
+        paginationProgressBar.visibility = View.INVISIBLE
+    }
+    private fun showProgressBar() {
+        paginationProgressBar.visibility = View.VISIBLE
+    }
+
+    override fun invoke(it: Item) {
+        val bundle = Bundle().apply {
+            putString(CUSTOM_URL, it.snippet.customUrl)
+        }
+        findNavController().navigate(
+            R.id.action_homeFragment_to_channelFragment,bundle
+        )
     }
 }
