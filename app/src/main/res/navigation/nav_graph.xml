@@ -12,13 +12,16 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_channelFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
             app:destination="@id/channelFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/channelFragment"
-        android:name="com.example.assignment1.ui.fragments.ChannelFragment"
+        android:name="com.example.assignment1.ui.fragments.ChannelContentFragment"
         android:label="fragment_channel"
-        tools:layout="@layout/fragment_channel_description" >
+        tools:layout="@layout/fragment_channel_content" >
         <action
             android:id="@+id/action_channelFragment_to_homeFragment"
             app:destination="@id/homeFragment" />

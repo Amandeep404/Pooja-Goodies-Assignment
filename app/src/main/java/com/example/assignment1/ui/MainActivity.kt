@@ -1,5 +1,6 @@
 package com.example.assignment1.ui
 
+import android.media.audiofx.Virtualizer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
    //     val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_main)
 
+        viewModel = ViewModelProvider(this).get(ChannelListViewModel::class.java)
 
     }
 }

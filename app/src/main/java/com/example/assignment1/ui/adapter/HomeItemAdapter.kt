@@ -1,20 +1,24 @@
 package com.example.assignment1.ui.adapter
 
 import android.graphics.Rect
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.view.menu.MenuView.ItemView
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.assignment1.R
 import com.example.assignment1.data.models.Item
 import com.example.assignment1.databinding.ItemYtChannelListBinding
 import com.example.assignment1.ui.fragments.HomeFragment
 
-class HomeItemAdapter(val clickListener: HomeFragment):RecyclerView.Adapter<HomeItemAdapter.HomeItemViewHolder>() {
+class HomeItemAdapter:RecyclerView.Adapter<HomeItemAdapter.HomeItemViewHolder>() {
 
 
     private val differCallBack = object : DiffUtil.ItemCallback<Item>(){
@@ -29,7 +33,7 @@ class HomeItemAdapter(val clickListener: HomeFragment):RecyclerView.Adapter<Home
     val differ = AsyncListDiffer(this, differCallBack)
 
     inner class HomeItemViewHolder(val binding: ItemYtChannelListBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(response : Item, clickListener : (Item) -> Unit){
+        fun bind(response : Item){
 
             val channelLogoUrl = response.snippet.thumbnails.medium.url
             val title = response.snippet.title
@@ -43,14 +47,17 @@ class HomeItemAdapter(val clickListener: HomeFragment):RecyclerView.Adapter<Home
 
             }
             itemView.setOnClickListener {
-                clickListener(response)
+                onItemClickListener?.let { item ->
+                    item(response)
+
+                }
             }
 
         }
     }
 
     override fun onBindViewHolder(holder: HomeItemViewHolder, position: Int) {
-        holder.bind(differ.currentList[position],clickListener )
+        holder.bind(differ.currentList[position] )
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeItemViewHolder {
@@ -61,6 +68,12 @@ class HomeItemAdapter(val clickListener: HomeFragment):RecyclerView.Adapter<Home
     }
 
     override fun getItemCount() = differ.currentList.size
+
+    private var onItemClickListener: ((Item) -> Unit)? = null
+
+    fun setOnItemClickListener(listener : (Item) -> Unit){
+        onItemClickListener = listener
+    }
 
 
 }

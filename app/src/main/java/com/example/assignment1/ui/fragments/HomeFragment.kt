@@ -21,13 +21,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(R.layout.fragment_home), (Item) -> Unit {
+class HomeFragment : Fragment(R.layout.fragment_home){
 
     companion object{
        const val TAG = "LIST_OF_CHANNELS"
-        const val CUSTOM_URL = "CUSTOM_URL"
+        const val CHANNEL_ID = "channelId"
+        const val CHANNEL_NAME = "channelName"
     }
-
 
     private var _binding : FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -48,11 +48,25 @@ class HomeFragment : Fragment(R.layout.fragment_home), (Item) -> Unit {
         setUpRecyclerView()
         observeDataFromApi()
 
+        homeItemAdapter.setOnItemClickListener {
+
+            Log.e(CHANNEL_ID, it.id)
+
+            val bundle = Bundle().apply {
+                putString(CHANNEL_ID, it.id)
+                putString(CHANNEL_NAME, it.snippet.title)
+            }
+            findNavController().navigate(
+                R.id.action_homeFragment_to_channelFragment,bundle
+            )
+
+        }
+
     }
 
 
     private fun setUpRecyclerView() {
-        homeItemAdapter = HomeItemAdapter(this)
+        homeItemAdapter = HomeItemAdapter()
         binding.rvHomePage.apply {
             adapter = homeItemAdapter
             layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
@@ -95,12 +109,5 @@ class HomeFragment : Fragment(R.layout.fragment_home), (Item) -> Unit {
         paginationProgressBar.visibility = View.VISIBLE
     }
 
-    override fun invoke(it: Item) {
-        val bundle = Bundle().apply {
-            putString(CUSTOM_URL, it.snippet.customUrl)
-        }
-        findNavController().navigate(
-            R.id.action_homeFragment_to_channelFragment,bundle
-        )
-    }
+
 }
